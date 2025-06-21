@@ -7,6 +7,28 @@ El balanceador en tu proyecto tiene como objetivo repartir las solicitudes de lo
 
 **Pasos realizados:**
 
+## **Configuración de IP en la máquina virtual**
+
+* **Cambio de IP dinámica a estatica:**
+```bash
+ sudo nano /etc/netplan/50-cloud-init.yaml
+   ```
+Dentro del archivo /etc/...
+```bash
+ network:
+  version: 2
+  ethernets:
+    enp0s3:
+      dhcp4: false
+      addresses: [192.168.100.10/24]
+      routes:
+      - to: default
+        via: 192.168.100.1
+      nameservers:
+        addresses: [8.8.8.8, 8.8.4.4]
+
+   ```
+
 ## **Instalación y configuración de Nginx:**
 * **Instalación de Nginx:**
 ```bash
@@ -33,27 +55,7 @@ En caso de que este no este en estado de enable:
  sudo apt install php8.3-fpm php8.3-mbstring php8.3-curl php8.3-xml php8.3-mysql php8.3-zip
    ```
 
-## **Configuración de IP en la máquina virtual**
 
-* **Cambio de IP dinámica a estatica:**
-```bash
- sudo nano /etc/netplan/50-cloud-init.yaml
-   ```
-Dentro del archivo /etc/...
-```bash
- network:
-  version: 2
-  ethernets:
-    enp0s3:
-      dhcp4: false
-      addresses: [192.168.100.10/24]
-      routes:
-      - to: default
-        via: 192.168.100.1
-      nameservers:
-        addresses: [8.8.8.8, 8.8.4.4]
-
-   ```
 ## **Configuración del archivo de balanceador**
 * **Configuración del sitio habilitado**
 ```bash
