@@ -397,4 +397,10 @@ Si esta corriendo correctamente, devuelve:
 - Servidor API corriendo en http://localhost:3001
 Conectado a la base de datos
 
+## **Verificación**
+Para verificar su funcionamiento (con el blanceador) se entra a:
+```bash
+sis313.final #ip de la máquina virtual del balanceador que conecta a la app 1 donde ejecuta index.js
+```
+
 </div>
