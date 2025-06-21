@@ -115,5 +115,8 @@ ls /etc/nginx/sites-enabled/
 ```bash
 sudo systemctl reload nginx
    ```
-
+# **Añadir a hosts ip y dns del balanceador**
+```bash
+192.168.100.10 sis313.final
+   ```
 </div>
