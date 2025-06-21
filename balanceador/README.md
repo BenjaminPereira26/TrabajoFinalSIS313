@@ -54,7 +54,10 @@ En caso de que este no este en estado de enable:
 ```bash
  sudo apt install php8.3-fpm php8.3-mbstring php8.3-curl php8.3-xml php8.3-mysql php8.3-zip
    ```
-
+* **Restablecimiento del servicio:**
+```bash
+   sudo systemctl restart nginx
+   ```
 
 ## **Configuración del archivo de balanceador**
 * **Configuración del sitio habilitado**
