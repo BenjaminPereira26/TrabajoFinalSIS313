@@ -1,4 +1,4 @@
-# **Aplicación 1**
+# **Aplicación 1 (Antes de la creación de la BD)**
 <div align="justify">
 
 **Objetivo dentro del proyecto:** 
@@ -138,6 +138,10 @@ Dentro de /myapp1/api se ejecuta:
 ls
 ```
 Se debería ver: package.json, que es donde se guarda los archivos que permiten trabajar con nodejs y expressjs de la aplicación, usados en index.js que guarda el código que permite a la aplicación funcionar
+* **Añadir extensiones dentro del proyecto:**
+```bash
+npm install -g npm@11.4.2
+```
 
 # **Archivo de prueba:**
 El archivo de prueba con el código de express se encuentra e¿dentro de index.js, por lo que allí es donde se carga el código, entrando en:
@@ -161,9 +165,17 @@ app.listen(PORT, '0.0.0.0', () => {
   console.log(Servidor API corriendo en http://localhost:${PORT});
 });
 ```
+Para hacer correr la API, se ejecuta:
+```bash
+node index.js
+```
+Si esta corriendo correctamente, devuelve: Servidor API corriendo en http://localhost:3001
+
 Para verificar su funcionamiento se entra a:
 ```bash
 192.168.100.20:3001 #ip de la máquina virtual y el puerto donde ejecuta index.js
 ```
+# **Aplicación 1 (Después de la creación de la BD)**
 
+# **Añadir extensiones de cliente para mariadb:**
 </div>
