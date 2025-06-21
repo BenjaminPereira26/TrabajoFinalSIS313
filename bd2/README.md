@@ -1,3 +1,8 @@
-# Base de datos
+# **Base de datos 2**
+<div align="justify">
 
-Bienvenido a la sección de introducción del manual.
+**Objetivo dentro del proyecto:** 
+
+
+
+</div>
