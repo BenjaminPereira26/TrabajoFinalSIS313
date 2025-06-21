@@ -236,7 +236,7 @@ app.get('/', (req, res) => {
         </style>
       </head>
       <body>
-        <h1>Productos - SIS313</h1>
+        <h1>Productos - SIS313 - APP 2</h1>
 
         <form id="formAgregar">
           <input name="nombre" placeholder="Nombre del producto" required />
@@ -396,5 +396,12 @@ app.listen(PORT, '0.0.0.0', () => {
 Si esta corriendo correctamente, devuelve: 
 - Servidor API corriendo en http://localhost:3002
 Conectado a la base de datos
+
+
+## **Verificación**
+Para verificar su funcionamiento (con el blanceador) se entra a:
+```bash
+sis313.final #ip de la máquina virtual del balanceador que conecta a la app 2 donde ejecuta index.js
+```
 
 </div>
