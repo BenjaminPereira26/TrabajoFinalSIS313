@@ -82,4 +82,62 @@ debería responder: 10.9.2
 
 ## **Instalación de express js**
 
+* **Creación de la carpeta que contendrá la aplicación:**
+
+```bash
+mkdir myapp1
+cd myapp1
+```
+* **Creación de la subcarpeta que contendrá el código de la API:**
+Se la crea dentor de la carpeta myapp1
+```bash
+mkdir api
+cd api/
+```
+* **Instalación de express js:**
+```bash
+npm init
+```
+* **Configuraciones:**
+
+```bash
+package name: (api)
+version: (1.0.0)
+description: API Backend SIS313
+entry point: (index.js)
+test command:
+git repository:
+keywords: API, SIS313
+author: SIS313
+license: (ISC)
+About to write to /home/app1/myapp1/api/package.json:
+
+{
+  "name": "api",
+  "version": "1.0.0",
+  "description": "API Backend SIS313",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "API",
+    "SIS313"
+  ],
+  "author": "SIS313",
+  "license": "ISC"
+}
+
+
+Is this OK? (yes) y
+```
+
+* **Verificación:**
+Dentro de /myapp1/api se ejecuta:
+```bash
+ls
+```
+Se debería ver: package.json, que es donde se guarda los archivos que permiten trabajar con nodejs y expressjs de la aplicación, usados en index.js que guarda el código que permite a la aplicación funcionar
+
+
 </div>
