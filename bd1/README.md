@@ -5,6 +5,7 @@
 **Objetivo dentro del proyecto:**
    
 La base de datos bd1 se encarga de gestionar y almacenar toda la información central del sistema, específicamente los datos relacionados con los productos de la tienda. Su función principal dentro del proyecto es ofrecer un respaldo estructurado a las aplicaciones (app1 y app2), permitiendo realizar operaciones CRUD (crear, leer, actualizar y eliminar productos) a través de consultas SQL. Esta base de datos corre en un servidor MariaDB configurado para aceptar conexiones remotas, lo que permite que las aplicaciones accedan a ella desde otras máquinas dentro de la red, facilitando así la disponibilidad y coherencia de los datos en todo el sistema.
+La base de datos 1 como maestra es la encargada de gestionar y almacenar la información principal de la aplicación, permitiendo tanto operaciones de lectura como de escritura. Está configurada con un server-id, tiene habilitado el registro binario (log_bin) y permite conexiones remotas para que los esclavos puedan replicar sus cambios. Además, se creó un usuario con privilegios de replicación (replicador) y se generó un respaldo (mysqldump) con metadatos de replicación que se usó para sincronizar inicialmente al esclavo.
 
 ## **Instalación y configuración de MariaDB**
 * **Instalar MariaDB Server:**
