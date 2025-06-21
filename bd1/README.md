@@ -89,4 +89,54 @@ ss -tlnp | grep 3306
   ```
 
 # **Configuración de la Base de Datos como maestra:**
+* **Editar el archivo de configuración:**
+ ```bash
+sudo nano /etc/mysql/mariadb.conf.d/50-server.cnf
+  ```
+Dentro se añade:
+ ```bash
+bind-address = 0.0.0.0
+server-id = 1
+log_bin = /var/log/mysql/mariadb-bin
+binlog_do_db = tienda       # (opcional si solo replicas esa base)
+  ```
+Asegúrurase de que el archivo de log exista o que MariaDB lo pueda crear.
+* **Reiniciar el servicio:**
+ ```bash
+sudo systemctl restart mariadb
+  ```
+
+## **Crear el usuario de replicación**
+* **Conectar a MariaDB:**
+ ```bash
+sudo mariadb
+  ```
+Ejecutar:
+ ```bash
+CREATE USER 'replicador'@'%' IDENTIFIED BY 'TuPasswordFuerte';
+GRANT REPLICATION SLAVE ON *.* TO 'replicador'@'%';
+FLUSH PRIVILEGES;
+  ```
+* **Ver estado del log binario:**
+ ```bash
+SHOW MASTER STATUS;
+  ```
+Debería devolver algo como:
+ ```bash
++--------------------+----------+--------------+------------------+
+| File               | Position | Binlog_Do_DB | Binlog_Ignore_DB |
++--------------------+----------+--------------+------------------+
+| mariadb-bin.000001 |      330 | tienda       |                  |
++--------------------+----------+--------------+------------------+
+  ```
+
+* **Crear dump de la base tienda con metadatos para replicación:**
+ ```bash
+sudo mysqldump --databases tienda --master-data > tienda.sql
+  ```
+
+* **Copiar el dump a la esclava:**
+ ```bash
+scp -P 2205 tienda.sql ubu2@192.168.100.50:/home/usuario/
+  ```
 </div>
