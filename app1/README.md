@@ -143,7 +143,7 @@ Se debería ver: package.json, que es donde se guarda los archivos que permiten 
 npm install -g npm@11.4.2
 ```
 
-# **Archivo de prueba:**
+## **Archivo de prueba:**
 El archivo de prueba con el código de express se encuentra e¿dentro de index.js, por lo que allí es donde se carga el código, entrando en:
 ```bash
 nano index.js
@@ -171,11 +171,230 @@ node index.js
 ```
 Si esta corriendo correctamente, devuelve: Servidor API corriendo en http://localhost:3001
 
-Para verificar su funcionamiento se entra a:
+Para verificar su funcionamiento (sin el blanceador) se entra a:
 ```bash
 192.168.100.20:3001 #ip de la máquina virtual y el puerto donde ejecuta index.js
 ```
-# **Aplicación 1 (Después de la creación de la BD)**
 
-# **Añadir extensiones de cliente para mariadb:**
+Para verificar su funcionamiento (con el blanceador) se entra a:
+```bash
+sis313.final #dns del balanceador
+```
+# **Aplicación 1 (Después de la creación de la BD)**
+# **Cliente de mariadb:**
+* **Añadir extensiones de cliente para mariadb:**
+```bash
+npm install mysql2
+```
+# **Archivo CRUD para la app:**
+```bash
+const express = require('express');
+const mysql = require('mysql2');
+const app = express();
+const PORT = 3001;
+
+app.use(express.urlencoded({ extended: true })); // Para leer datos de formularios POST
+app.use(express.json());
+
+// Conexión a la base de datos
+const db = mysql.createConnection({
+  host: '192.168.100.40',
+  user: 'appuser',
+  password: 'App123@',
+  database: 'tienda'
+});
+
+db.connect((err) => {
+  if (err) {
+    console.error('Error conectando a la base de datos:', err);
+  } else {
+    console.log('Conectado a la base de datos');
+  }
+});
+
+// Página principal: muestra productos + formulario y tabla con acciones
+app.get('/', (req, res) => {
+  db.query('SELECT * FROM productos', (err, productos) => {
+    if (err) return res.status(500).send('Error consultando la base de datos');
+
+    let html = `
+      <!DOCTYPE html>
+      <html lang="es">
+      <head>
+        <meta charset="UTF-8" />
+        <title>Productos - SIS313</title>
+        <style>
+          body { font-family: Arial, sans-serif; margin: 40px; }
+          table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+          th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
+          th { background-color: #f2f2f2; }
+          form input { padding: 6px; margin-right: 10px; }
+          button { padding: 6px 12px; }
+          .btn { cursor: pointer; }
+          .btn-edit { color: blue; }
+          .btn-delete { color: red; }
+        </style>
+      </head>
+      <body>
+        <h1>Productos - SIS313</h1>
+
+        <form id="formAgregar">
+          <input name="nombre" placeholder="Nombre del producto" required />
+          <input name="precio" placeholder="Precio" type="number" step="0.01" required />
+          <button type="submit">Agregar Producto</button>
+        </form>
+
+        <table id="tablaProductos">
+          <thead>
+            <tr>
+              <th>ID</th><th>Nombre</th><th>Precio</th><th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${productos.map(p => `
+              <tr data-id="${p.id}">
+                <td>${p.id}</td>
+                <td class="nombre">${p.nombre}</td>
+                <td class="precio">$${p.precio != null ? Number(p.precio).toFixed(2) : '0.00'}</td>
+                <td>
+                  <button class="btn btn-edit" onclick="editar(${p.id})">Editar</button>
+                  <button class="btn btn-delete" onclick="borrar(${p.id})">Borrar</button>
+                </td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+
+        <script>
+          const form = document.getElementById('formAgregar');
+          form.addEventListener('submit', async e => {
+            e.preventDefault();
+            const formData = new FormData(form);
+            const data = {
+              nombre: formData.get('nombre'),
+              precio: parseFloat(formData.get('precio'))
+            };
+            const res = await fetch('/agregar', {
+              method: 'POST',
+              headers: {'Content-Type': 'application/json'},
+              body: JSON.stringify(data)
+            });
+            if (res.ok) {
+              form.reset();
+              cargarProductos();
+            } else {
+              alert('Error al agregar producto');
+            }
+          });
+
+          async function cargarProductos() {
+            const res = await fetch('/productos');
+            const productos = await res.json();
+            const tbody = document.querySelector('#tablaProductos tbody');
+            tbody.innerHTML = productos.map(p => \`
+              <tr data-id="\${p.id}">
+                <td>\${p.id}</td>
+                <td class="nombre">\${p.nombre}</td>
+                <td class="precio">$\${p.precio != null ? Number(p.precio).toFixed(2) : '0.00'}</td>
+                <td>
+                  <button class="btn btn-edit" onclick="editar(\${p.id})">Editar</button>
+                  <button class="btn btn-delete" onclick="borrar(\${p.id})">Borrar</button>
+                </td>
+              </tr>\`).join('');
+          }
+
+          async function borrar(id) {
+            if (!confirm('¿Seguro que quieres borrar este producto?')) return;
+            const res = await fetch('/borrar/' + id, { method: 'DELETE' });
+            if (res.ok) {
+              cargarProductos();
+            } else {
+              alert('Error al borrar producto');
+            }
+          }
+
+          async function editar(id) {
+            const tr = document.querySelector(\tr[data-id="\${id}"]\);
+            const nombreTd = tr.querySelector('.nombre');
+            const precioTd = tr.querySelector('.precio');
+
+            const nombreOld = nombreTd.textContent;
+            const precioOld = precioTd.textContent.replace('$','');
+
+            nombreTd.innerHTML = \<input type="text" id="editNombre" value="\${nombreOld}">\;
+            precioTd.innerHTML = \<input type="number" step="0.01" id="editPrecio" value="\${precioOld}">\;
+
+            const btnEdit = tr.querySelector('.btn-edit');
+            btnEdit.textContent = 'Guardar';
+            btnEdit.onclick = async () => {
+              const nuevoNombre = document.getElementById('editNombre').value;
+              const nuevoPrecio = parseFloat(document.getElementById('editPrecio').value);
+              const res = await fetch('/editar/' + id, {
+                method: 'PUT',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ nombre: nuevoNombre, precio: nuevoPrecio })
+              });
+              if (res.ok) {
+                cargarProductos();
+              } else {
+                alert('Error al editar producto');
+              }
+            };
+          }
+
+          // Carga inicial
+          cargarProductos();
+        </script>
+      </body>
+      </html>
+    `;
+    res.send(html);
+  });
+});
+
+// API para obtener productos (JSON)
+app.get('/productos', (req, res) => {
+  db.query('SELECT * FROM productos', (err, results) => {
+    if (err) return res.status(500).json({ error: 'Error en la base de datos' });
+    res.json(results);
+  });
+});
+
+// Agregar producto
+app.post('/agregar', (req, res) => {
+  const { nombre, precio } = req.body;
+  db.query('INSERT INTO productos (nombre, precio) VALUES (?, ?)', [nombre, precio], (err) => {
+    if (err) return res.status(500).json({ error: 'Error al agregar producto' });
+    res.status(200).json({ mensaje: 'Producto agregado' });
+  });
+});
+
+// Editar producto
+app.put('/editar/:id', (req, res) => {
+  const id = req.params.id;
+  const { nombre, precio } = req.body;
+  db.query('UPDATE productos SET nombre = ?, precio = ? WHERE id = ?', [nombre, precio, id], (err) => {
+    if (err) return res.status(500).json({ error: 'Error al editar producto' });
+    res.status(200).json({ mensaje: 'Producto actualizado' });
+  });
+});
+
+// Borrar producto
+app.delete('/borrar/:id', (req, res) => {
+  const id = req.params.id;
+  db.query('DELETE FROM productos WHERE id = ?', [id], (err) => {
+    if (err) return res.status(500).json({ error: 'Error al borrar producto' });
+    res.status(200).json({ mensaje: 'Producto borrado' });
+  });
+});
+
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(Servidor API corriendo en http://localhost:${PORT});
+});
+```
+
+Si esta corriendo correctamente, devuelve: 
+- Servidor API corriendo en http://localhost:3001
+Conectado a la base de datos
+
 </div>
