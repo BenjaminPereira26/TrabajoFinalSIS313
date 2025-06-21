@@ -139,5 +139,31 @@ ls
 ```
 Se debería ver: package.json, que es donde se guarda los archivos que permiten trabajar con nodejs y expressjs de la aplicación, usados en index.js que guarda el código que permite a la aplicación funcionar
 
+# **Archivo de prueba:**
+El archivo de prueba con el código de express se encuentra e¿dentro de index.js, por lo que allí es donde se carga el código, entrando en:
+```bash
+nano index.js
+```
+Dentro se haya este código:
+```bash
+const express = require('express');
+const app = express();
+const PORT = 3001;
+
+app.use(express.json()); // Para interpretar JSON
+
+// Ruta de prueba
+app.get('/', (req, res) => {
+  res.send('¡Hola desde la API SIS313 - APP1!');
+});
+
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(Servidor API corriendo en http://localhost:${PORT});
+});
+```
+Para verificar su funcionamiento se entra a:
+```bash
+192.168.100.20:3001 #ip de la máquina virtual y el puerto donde ejecuta index.js
+```
 
 </div>
