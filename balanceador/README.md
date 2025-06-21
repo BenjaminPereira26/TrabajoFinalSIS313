@@ -113,9 +113,20 @@ ls /etc/nginx/sites-enabled/
 
 * **Reinicio del servicio con los cambios**
 ```bash
-sudo systemctl reload nginx
+sudo systemctl restart nginx
    ```
 # **Añadir a hosts ip y dns del balanceador**
+```bash
+192.168.100.10 sis313.final
+   ```
+
+## **Prueba de conectividad con las apps**
+```bash
+curl http://192.168.100.20:3001/
+curl http://192.168.100.30:3002/
+   ```
+## **Hosts - Dns**
+Verificar que la ip de la máquina virtual del balanceador y su dns se encuentre añadido en la carpeta de hosts en la máquina cliente:
 ```bash
 192.168.100.10 sis313.final
    ```
