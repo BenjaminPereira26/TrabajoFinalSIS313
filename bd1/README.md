@@ -85,7 +85,6 @@ sudo systemctl restart mariadb
 
 * **Verificar que el puerto 3306 esté escuchando:**
  ```bash
- ```bash
 ss -tlnp | grep 3306
   ```
 
