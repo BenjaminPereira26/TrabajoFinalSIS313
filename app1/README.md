@@ -222,7 +222,7 @@ app.get('/', (req, res) => {
       <html lang="es">
       <head>
         <meta charset="UTF-8" />
-        <title>Productos - SIS313</title>
+        <title>Productos - SIS313 - APP1</title>
         <style>
           body { font-family: Arial, sans-serif; margin: 40px; }
           table { border-collapse: collapse; width: 100%; margin-top: 20px; }
