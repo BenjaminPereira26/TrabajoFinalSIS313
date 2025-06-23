@@ -188,6 +188,11 @@ sis313.final #dns del balanceador
 ```bash
 npm install mysql2
 ```
+
+* **Añadir extensiones de para usar express:**
+```bash
+npm install express
+```
 # **Archivo CRUD para la app:**
 ```bash
 const express = require('express');
